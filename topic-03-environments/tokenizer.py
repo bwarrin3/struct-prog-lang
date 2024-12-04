@@ -20,8 +20,19 @@ patterns = [
     ["<", "<"],
     [">", ">"],
     ["=", "="],
+    [";", ";"],
+    ["print", "print"],
+    ["while", "while"],
+    ["do", "do"],
+    ["if", "if"],
+    ["else", "else"],
+    ["function", "function"],
+    ["return", "return"],
     ["(\\d+\\.\\d*)|(\\d*\\.\\d+)|(\\d+)", "number"],
-    ["\\&\\&", "&&"],["\\|\\|", "||"],["!","!"]
+    ["[A-Za-z_][A-Za-z0-9_]*", "identifier"],
+    ["\\&\\&", "&&"],
+    ["\\|\\|", "||"],
+    ["!", "!"],
 ]
 
 for pattern in patterns:
@@ -69,7 +80,7 @@ def test_simple_tokens():
         assert tokens[0]["tag"] == char
         assert tokens[0]["value"] == char
         assert tokens[0]["position"] == i
-    for characters in ["(",")","+", "-", "*", "/", "==","!=","<",">","<=", ">=","=","||","&&","!"]:
+    for characters in ["(",")","+", "-", "*", "/", "==","!=","<",">","<=", ">=","=","||","&&","!","print"]:
         tokens = tokenize(characters)
         assert (
             tokens[0]["tag"] == characters
@@ -80,7 +91,15 @@ def test_simple_tokens():
         assert tokens[0]["tag"] == "number"
         assert tokens[0]["value"] == float(number)
 
+def test_identifier_tokens():
+    print("testing identifer tokens")
+    for s in ["x", "_", "X"]:
+        tokens = tokenize(s)
+        assert tokens[0]["tag"] == "identifier"
+        assert tokens[0]["value"] == s
+
 
 if __name__ == "__main__":
     test_simple_tokens()
+    test_identifier_tokens()
     print("done.")
